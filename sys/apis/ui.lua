@@ -2,8 +2,6 @@ local Canvas     = require('ui.canvas')
 local class      = require('class')
 local Event      = require('event')
 local Input      = require('input')
-local Peripheral = require('peripheral')
-local Sound      = require('sound')
 local Transition = require('ui.transition')
 local Util       = require('util')
 
@@ -168,51 +166,6 @@ function Manager:init()
 end
 
 function Manager:configure(appName, ...)
-	local options = {
-		device     = { arg = 'd', type = 'string',
-									 desc = 'Device type' },
-		textScale  = { arg = 't', type = 'number',
-									 desc = 'Text scale' },
-	}
-	local defaults = Util.loadTable('usr/config/' .. appName) or { }
-	if not defaults.device then
-		defaults.device = { }
-	end
-
-	Util.getOptions(options, { ... }, true)
-	local optionValues = {
-		name = options.device.value,
-		textScale = options.textScale.value,
-	}
-
-	Util.merge(defaults.device, optionValues)
-
-	if defaults.device.name then
-
-		local dev
-
-		if defaults.device.name == 'terminal' then
-			dev = term.current()
-		else
-			dev = Peripheral.lookup(defaults.device.name) --- device[defaults.device.name]
-		end
-
-		if not dev then
-			error('Invalid display device')
-		end
-		self:setDefaultDevice(self.Device({
-			device = dev,
-			textScale = defaults.device.textScale,
-		}))
-	end
-
-	if defaults.theme then
-		for k,v in pairs(defaults.theme) do
-			if self[k] and self[k].defaults then
-				Util.merge(self[k].defaults, v)
-			end
-		end
-	end
 end
 
 function Manager:disableEffects()
@@ -2568,7 +2521,6 @@ end
 
 function UI.Notification:error(value, timeout)
 	self.backgroundColor = colors.red
-	Sound.play('entity.villager.no', .5)
 	self:display(value, timeout)
 end
 
@@ -3366,7 +3318,6 @@ function UI.Form:save()
 			local s, m = self:validateField(child)
 			if not s then
 				self:setFocus(child)
-				Sound.play('entity.villager.no', .5)
 				self:emit({ type = 'form_invalid', message = m, field = child })
 				return false
 			end

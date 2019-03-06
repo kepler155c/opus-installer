@@ -10,9 +10,10 @@ local injector = load(http.get(url).readAll(), 'injector.lua', nil, _ENV)()
 -- install a require that only searches github
 injector(_ENV)
 
-local Git  = require('git')
-local UI   = require('ui')
-local Util = require('util')
+local BulkGet = require('bulkget')
+local Git     = require('git')
+local UI      = require('ui')
+local Util    = require('util')
 
 local currentFile = ''
 local currentProgress = 0
@@ -278,20 +279,25 @@ function pages.install:enable()
 
 	local i = 0
 	local numFiles = Util.size(install.files)
-	for filename,url in pairs(install.files) do
-		currentFile = filename
+
+	local files = { }
+	for filename, url in pairs(install.files) do
+		table.insert(files, {
+			url = url,
+			path = fs.combine(install.directory or '', filename)
+		})
+	end
+
+	BulkGet.download(files, function(e, s, m)
+		currentFile = e.path
 		currentProgress = i / numFiles * 100
 		self:draw(self)
 		self:sync()
-		local s, m = pcall(function()
-			Util.download(url, fs.combine(install.directory or '', filename))
-		end)
 		if not s then
 			self.failed = m:gsub('.*: (.*)', '%1')
-			break
 		end
 		i = i + 1
-	end
+	end)
 
 	if not self.failed then
 		currentProgress = 100

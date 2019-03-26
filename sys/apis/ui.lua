@@ -44,6 +44,8 @@ end
 local Manager = class()
 function Manager:init()
 	self.devices = { }
+	self.theme = { }
+	self.extChars = Util.getVersion() >= 1.76
 
 	local function keyFunction(event, code, held)
 		local ie = Input:translate(event, code, held)
@@ -1215,9 +1217,9 @@ UI.Grid.defaults = {
 	headerSortColor = colors.yellow,
 	unfocusedTextSelectedColor = colors.white,
 	unfocusedBackgroundSelectedColor = colors.gray,
-	focusIndicator = '>',
+	focusIndicator = UI.extChars and '\183' or '>',
 	sortIndicator = ' ',
-	inverseSortIndicator = '^',
+	inverseSortIndicator = UI.extChars and '\24' or '^',
 	values = { },
 	columns = { },
 	accelerators = {
@@ -1840,8 +1842,8 @@ UI.TitleBar.defaults = {
 	textColor = colors.white,
 	backgroundColor = colors.cyan,
 	title = '',
-	frameChar = '-',
-	closeInd = '*',
+	frameChar = UI.extChars and '\140' or '-',
+	closeInd = UI.extChars and '\215' or '*',
 }
 function UI.TitleBar:draw()
 	local sb = SB:new(self.width)
@@ -2942,8 +2944,8 @@ UI.Chooser.defaults = {
 	nochoice = 'Select',
 	backgroundFocusColor = colors.lightGray,
 	textInactiveColor = colors.gray,
-	leftIndicator = '<',
-	rightIndicator = '>',
+	leftIndicator = UI.extChars and '\17' or '<',
+	rightIndicator = UI.extChars and '\16' or '>',
 	height = 1,
 }
 function UI.Chooser:setParent()
@@ -3023,9 +3025,9 @@ UI.Checkbox = class(UI.Window)
 UI.Checkbox.defaults = {
 	UIElement = 'Checkbox',
 	nochoice = 'Select',
-	checkedIndicator = 'X',
-	leftMarker = '[',
-	rightMarker = ']',
+	checkedIndicator = UI.extChars and '\4' or 'X',
+	leftMarker = UI.extChars and '\124' or '[',
+	rightMarker = UI.extChars and '\124' or ']',
 	value = false,
 	textColor = colors.white,
 	backgroundColor = colors.black,
@@ -3105,9 +3107,9 @@ UI.ScrollBar = class(UI.Window)
 UI.ScrollBar.defaults = {
 	UIElement = 'ScrollBar',
 	lineChar = '|',
-	sliderChar = '#',
-	upArrowChar = '^',
-	downArrowChar = 'v',
+	sliderChar = UI.extChars and '\127' or '#',
+	upArrowChar = UI.extChars and '\30' or '^',
+	downArrowChar = UI.extChars and '\31' or 'v',
 	scrollbarColor = colors.lightGray,
 	value = '',
 	width = 1,
@@ -3455,11 +3457,6 @@ end
 
 function UI.NftImage:setImage(image)
 	self.image = image
-end
-
-UI:loadTheme('usr/config/ui.theme')
-if Util.getVersion() >= 1.76 then
-	UI:loadTheme('sys/etc/ext.theme')
 end
 
 UI:setDefaultDevice(UI.Device({ device = term.current() }))

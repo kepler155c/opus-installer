@@ -103,6 +103,7 @@ end
 --[[ Splash ]]--
 function pages.splash:enable()
 	page.titleBar.title = 'Installer v1.0'
+	page.titleBar:draw()
 	UI.Viewport.enable(self)
 end
 
@@ -120,6 +121,7 @@ end
 --[[ License ]]--
 function pages.license:enable()
 	page.titleBar.title = 'License Review'
+	page.titleBar:draw()
 	page.wizard.nextButton.text = 'Accept'
 	UI.Viewport.enable(self)
 end
@@ -145,6 +147,7 @@ function pages.review:enable()
 		page.wizard.nextButton.text = 'Begin'
 		page.titleBar.title = 'Download and Install'
 	end
+	page.titleBar:draw()
 	UI.Viewport.enable(self)
 end
 
@@ -164,6 +167,7 @@ end
 --[[ Files ]]--
 function pages.files:enable()
 	page.titleBar.title = 'Review Files'
+	page.titleBar:draw()
 	self.grid.values = { }
 	for k,v in pairs(install.files) do
 		table.insert(self.grid.values, { file = k, code = v })
@@ -271,6 +275,7 @@ function pages.install:enable()
 
 	page.titleBar.title = 'Installing...'
 	page.titleBar.event = nil
+	page.titleBar:draw()
 
 	UI.Window.enable(self)
 

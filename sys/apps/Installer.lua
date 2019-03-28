@@ -256,6 +256,7 @@ end
 --[[ Branch ]]--
 function pages.branch:enable()
 	page.titleBar.title = 'Select Branch'
+	page.titleBar:draw()
 	UI.Window.enable(self)
 end
 

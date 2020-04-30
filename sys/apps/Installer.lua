@@ -294,6 +294,10 @@ function pages.install:enable()
 		})
 	end
 
+	if install.preCopy then
+		install.preCopy(args[1] or 'install')
+	end
+
 	BulkGet.download(files, function(e, s, m)
 		currentFile = e.path
 		currentProgress = i / numFiles * 100

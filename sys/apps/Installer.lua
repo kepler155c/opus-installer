@@ -141,7 +141,7 @@ end
 --[[ Review ]]--
 function pages.review:enable()
 	if mode == 'uninstall' then
-		page.nextButton.text = 'Remove'
+		page.wizard.nextButton.text = 'Remove'
 		page.titleBar.title = 'Remove Installed Files'
 	else
 		page.wizard.nextButton.text = 'Begin'

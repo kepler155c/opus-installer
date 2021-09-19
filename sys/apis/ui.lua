@@ -961,7 +961,7 @@ function UI.Device:runTransitions(transitions, canvas)
 		if Util.empty(transitions) then
 			break
 		end
-		os.sleep(0)
+		os.sleep(0.05)
 	end
 end
 
@@ -2608,7 +2608,7 @@ end
 function UI.Throttle:update()
 	local cc = os.clock()
 	if cc > self.c + self.timeout then
-		os.sleep(0)
+		os.sleep(0.05)
 		self.c = os.clock()
 		self.enabled = true
 		if not self.canvas then

@@ -89,7 +89,7 @@ local pages = {
 
 local function getFileList()
 	if install.gitRepo then
-		local gitFiles = Git.list(string.format('%s/%s', _G.OPUS_REPO or _G.install.gitRepo,
+		local gitFiles = Git.list(string.format('%s/%s', _G.OPUS_REPO or install.gitRepo,
 			_G.OPUS_INSTALL_BRANCH or install.gitBranch or 'master'))
 		install.files = { }
 		install.diskspace = 0

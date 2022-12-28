@@ -4,7 +4,7 @@ local http    = _G.http
 local install = _ENV.install
 local os      = _G.os
 
-local url ='https://raw.githubusercontent.com/kepler155c/opus-installer/master/sys/apis/injector.lua'
+local url = 'https://raw.githubusercontent.com/kepler155c/opus-installer/master/sys/apis/injector.lua'
 local injector = load(http.get(url).readAll(), 'injector.lua', nil, _ENV)()
 
 -- install a require that only searches github
@@ -59,7 +59,10 @@ local pages = {
 				{ heading = 'Branch',      key = 'branch' },
 				{ heading = 'Description', key = 'description' },
 			},
-			values = install.branches,
+			values = {
+				{ branch = 'develop-1.8', description = 'Recommended' },
+				_G.OPUS_INSTALL_BRANCH and { branch = _G.OPUS_INSTALL_BRANCH, description = "Alternative" } or nil
+			},
 			autospace = true,
 		},
 	},
@@ -86,12 +89,16 @@ local pages = {
 
 local function getFileList()
 	if install.gitRepo then
-		local gitFiles = Git.list(string.format('%s/%s', install.gitRepo, install.gitBranch or 'master'))
+		local gitFiles = Git.list(string.format('%s/%s', _G.OPUS_REPO or install.gitRepo,
+			_G.OPUS_INSTALL_BRANCH or install.gitBranch or 'master'))
 		install.files = { }
 		install.diskspace = 0
 		for path, entry in pairs(gitFiles) do
-			install.files[path] = entry.url
-			install.diskspace = install.diskspace + math.max(500, entry.size)
+			-- Ignore files which are useless for Opus installation
+			if not path:match("^%.git") and not path:match("%.md$") then
+				install.files[path] = entry.url
+				install.diskspace = install.diskspace + math.max(500, entry.size)
+			end
 		end
 	end
 

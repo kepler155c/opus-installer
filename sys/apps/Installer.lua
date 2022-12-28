@@ -94,8 +94,11 @@ local function getFileList()
 		install.files = { }
 		install.diskspace = 0
 		for path, entry in pairs(gitFiles) do
-			install.files[path] = entry.url
-			install.diskspace = install.diskspace + math.max(500, entry.size)
+			-- Ignore files which are useless for Opus installation
+			if not path:match("^%.git") and not path:match("%.md$") then
+				install.files[path] = entry.url
+				install.diskspace = install.diskspace + math.max(500, entry.size)
+			end
 		end
 	end
 
